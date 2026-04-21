@@ -81,4 +81,7 @@ test('add a capsule to cart', async ({ page }) => {
     await expect(page).toHaveTitle(/Login/);
     await expect(page).toHaveURL("https://www.nespresso.com/fr/en/secure/login?destination-redirect=/fr/en/checkoutMode");
 
+
+
+    //Added the class not empty to the xpath instead of the method
 });

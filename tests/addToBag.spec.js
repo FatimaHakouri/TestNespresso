@@ -2,7 +2,11 @@
 import { test, expect } from '@playwright/test';
 import { assert } from 'node:console';
 
+//je peux utiliser test.beforeAll si je veux diviser les tests
 test('add a capsule to cart', async ({ page }) => {
+
+    test.setTimeout(60000);
+
     await page.goto('https://www.nespresso.com/fr/en/order/capsules/original');
 
     //Test the title 
@@ -28,7 +32,7 @@ test('add a capsule to cart', async ({ page }) => {
 
     const selectedQuantity = page.locator("xpath =//div[contains(@class,'MiniBasketItem__addToBagButton')]//button[@data-qa='Roma']//div[@class='AddToBagButtonSmall__quantity']");
 
-    const checkoutButton = page.locator("xpath =//*[@id='ta-mini-basket__checkout']");
+    const checkoutButton = page.locator("xpath =//button[@id='ta-mini-basket__checkout']");
 
 
 
@@ -43,10 +47,10 @@ test('add a capsule to cart', async ({ page }) => {
             isFound = true;
             break;
         }
-        // Scroll de 600px comme dans votre script Selenium
+
         await page.mouse.wheel(0, 700);
-        // Petit délai pour laisser le JS charger les produits
-        await page.waitForTimeout(700);
+
+        await page.waitForTimeout(500);
     }
 
     if (!isFound) {
@@ -66,11 +70,14 @@ test('add a capsule to cart', async ({ page }) => {
     //!!!!! does not work
     //await page.waitForTimeout(1000);
 
-    //await expect(cartButton).toHaveClass(/not-empty/, { timeout: 10000 });
+    //await expect(cartButton).toHaveClass(/not-empty/);
+    await expect(cartButton).toBeVisible();
     await cartButton.click();
     //await page.pause();
 
-
+    //Had to repeat these 2
+    //await expect(checkoutButton).toBeVisible();
+    //await expect(checkoutButton).toBeEnabled();
     await expect(selectedQuantity).toBeVisible();
     await expect(selectedQuantity).toHaveText(qty);
 
@@ -78,8 +85,12 @@ test('add a capsule to cart', async ({ page }) => {
     await expect(checkoutButton).toBeEnabled();
     await checkoutButton.click();
 
+
+    //const loginButton = page.locator('xpath=//button[@id="ta-login-page-login-submit"]');
+    //await expect(loginButton).toBeVisible();
     await expect(page).toHaveTitle(/Login/);
     await expect(page).toHaveURL("https://www.nespresso.com/fr/en/secure/login?destination-redirect=/fr/en/checkoutMode");
+
 
 
 
